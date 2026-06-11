@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>AURUM - Forgot Password</title>
+
+<style>
+body{
+    background:black;
+    color:gold;
+    font-family:Arial;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+}
+
+.box{
+    background:#111;
+    padding:40px;
+    width:350px;
+    text-align:center;
+    border-radius:10px;
+    box-shadow:0 0 20px gold;
+}
+
+input{
+    width:100%;
+    padding:12px;
+    margin:15px 0;
+    background:black;
+    border:1px solid gold;
+    color:gold;
+}
+
+button{
+    width:100%;
+    padding:12px;
+    background:gold;
+    border:none;
+    font-weight:bold;
+    cursor:pointer;
+}
+</style>
+</head>
+
+<body>
+
+<div class="box">
+
+<h2>Forgot Password</h2>
+
+<input type="email" id="email" placeholder="Enter Email">
+
+<button onclick="checkEmail()">Continue</button>
+
+</div>
+
+<script>
+
+function checkEmail(){
+
+    const email = document.getElementById("email").value;
+
+    fetch("http://localhost:3000/check-email",{
+        method:"POST",
+        headers:{
+            "Content-Type":"application/json"
+        },
+        body:JSON.stringify({email})
+    })
+
+    .then(res => res.json())
+
+    .then(data => {
+
+        if(data.success){
+
+            localStorage.setItem("resetEmail", email);
+
+            window.location.href = "reset.html";
+
+        }else{
+
+            alert("Email not found");
+
+        }
+
+    })
+
+    .catch(err=>{
+        console.log(err);
+        alert("Server error");
+    });
+
+}
+
+</script>
+
+</body>
+</html>

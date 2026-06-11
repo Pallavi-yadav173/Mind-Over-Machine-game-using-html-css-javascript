@@ -1,0 +1,115 @@
+/* ── Reset ── */
+*, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  /* ── AURUM CSS Variables ── */
+  :root {
+    --gold-bright: #f0c040;
+    --gold-mid:    #d4a017;
+    --gold-dark:   #c8900a;
+    --gold-deep:   #8a6010;
+    --gold-muted:  #5a3e00;
+    --gold-faint:  #3a2800;
+    --bg-base:     #0a0700;
+  }
+  
+  /* ── Base ── */
+  html, body {
+    width: 100%;
+    height: 100%;
+    background: var(--bg-base);
+    overflow: hidden;
+    font-family: 'Cinzel', serif;
+  
+    /* Hex-grid overlay */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='52'%3E%3Cpolygon points='30,2 58,17 58,35 30,50 2,35 2,17' fill='none' stroke='%23d4a017' stroke-width='1'/%3E%3C/svg%3E");
+    background-size: 60px 52px;
+  }
+  
+  /* Radial glow layers on body */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 70% 55% at 50%   0%, #3d2800 0%, transparent 65%),
+      radial-gradient(ellipse 50% 30% at 50% 100%, #2a1a00 0%, transparent 55%),
+      radial-gradient(ellipse 30% 40% at 10%  50%, #1a1000 0%, transparent 50%),
+      radial-gradient(ellipse 30% 40% at 90%  50%, #1a1000 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+  }
+  
+  /* Vignette */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(ellipse 80% 80% at 50% 50%, transparent 40%, rgba(0,0,0,0.65) 100%);
+    pointer-events: none;
+    z-index: 0;
+  }
+  
+  /* Scanlines */
+  .scanlines {
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 3px,
+      rgba(0, 0, 0, 0.07) 3px,
+      rgba(0, 0, 0, 0.07) 4px
+    );
+    pointer-events: none;
+    z-index: 1;
+  }
+  
+  /* ── Canvas ── */
+  #canvas1 {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+  
+    /* Golden border — replaces the plain black border */
+    border: 3px solid var(--gold-dark);
+    outline: 1px solid var(--gold-faint);
+    box-shadow:
+      0 0 0 1px var(--gold-muted),
+      0 0 18px rgba(212, 160, 23, 0.25),
+      0 0 40px rgba(212, 160, 23, 0.10),
+      inset 0 0 12px rgba(0, 0, 0, 0.5);
+  
+    background: #4d79bc;
+    max-width: 100%;
+    max-height: 100%;
+  }
+  
+  /* Corner ornaments on canvas — injected by JS (optional, see script.js) */
+  .canvas-corner {
+    position: fixed;
+    width: 48px;
+    height: 48px;
+    border-color: var(--gold-muted);
+    border-style: solid;
+    opacity: 0.55;
+    pointer-events: none;
+    z-index: 3;
+  }
+  .canvas-corner--tl { top: 20px;    left: 20px;  border-width: 2px 0 0 2px; }
+  .canvas-corner--tr { top: 20px;    right: 20px; border-width: 2px 2px 0 0; }
+  .canvas-corner--bl { bottom: 20px; left: 20px;  border-width: 0 0 2px 2px; }
+  .canvas-corner--br { bottom: 20px; right: 20px; border-width: 0 2px 2px 0; }
+  
+  /* ── Hide asset images ── */
+  #layer1, #layer2, #layer3, #layer4,
+  #player, #angler1, #angler2, #lucky,
+  #projectile, #gears, #hivewhale, #drone,
+  #smokeExplosion, #fireExplosion {
+    display: none;
+  }

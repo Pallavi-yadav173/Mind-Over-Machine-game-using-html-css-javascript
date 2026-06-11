@@ -1,0 +1,684 @@
+<!DOCTYPE html> 
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AURUM — Select Level</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;600&family=Rajdhani:wght@400;500;600&display=swap" rel="stylesheet" />
+
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --gold-bright: #f0c040;
+      --gold-mid:    #d4a017;
+      --gold-dark:   #c8900a;
+      --gold-deep:   #8a6010;
+      --gold-muted:  #5a3e00;
+      --gold-faint:  #3a2800;
+      --bg-base:     #0a0700;
+      --bg-panel:    rgba(12, 8, 0, 0.85);
+      --text-bright: #f5d060;
+      --text-mid:    #c8900a;
+      --text-dim:    #b8860b;   
+      --text-ghost:  #8a6020;
+      --locked-col:  #2a1e00;
+    }
+
+    html, body {
+      width: 100%; height: 100%;
+      background: var(--bg-base);
+      overflow: hidden;
+      font-family: 'Cinzel', serif;
+    }
+
+    /* ── Scene ── */
+    .scene {
+      position: relative;
+      width: 100%; height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      gap: 0;
+    }
+
+    /* ── Backgrounds ── */
+    .bg-radial {
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse 70% 55% at 50%   0%, #3d2800 0%, transparent 65%),
+        radial-gradient(ellipse 50% 30% at 50% 100%, #2a1a00 0%, transparent 55%),
+        radial-gradient(ellipse 30% 40% at 10%  50%, #1a1000 0%, transparent 50%),
+        radial-gradient(ellipse 30% 40% at 90%  50%, #1a1000 0%, transparent 50%);
+      pointer-events: none;
+    }
+    .bg-hex {
+      position: absolute; inset: 0; opacity: 0.06;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='52'%3E%3Cpolygon points='30,2 58,17 58,35 30,50 2,35 2,17' fill='none' stroke='%23d4a017' stroke-width='1'/%3E%3C/svg%3E");
+      background-size: 60px 52px;
+      pointer-events: none;
+    }
+    .bg-vignette {
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse 80% 80% at 50% 50%, transparent 40%, rgba(0,0,0,0.6) 100%);
+      pointer-events: none;
+    }
+    .bg-scanlines {
+      position: absolute; inset: 0;
+      background: repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,0,0,0.07) 3px, rgba(0,0,0,0.07) 4px);
+      pointer-events: none;
+    }
+
+    /* ── Corners ── */
+    .corner {
+      position: absolute; width: 48px; height: 48px;
+      border-color: #7a5200; border-style: solid; opacity: 0.55; pointer-events: none;
+    }
+    .corner--tl { top:20px;left:20px;border-width:2px 0 0 2px; }
+    .corner--tr { top:20px;right:20px;border-width:2px 2px 0 0; }
+    .corner--bl { bottom:20px;left:20px;border-width:0 0 2px 2px; }
+    .corner--br { bottom:20px;right:20px;border-width:0 2px 2px 0; }
+    .corner::before {
+      content:''; position:absolute; width:4px; height:4px; background:var(--gold-muted); opacity:0.6;
+    }
+    .corner--tl::before{top:-2px;left:-2px}
+    .corner--tr::before{top:-2px;right:-2px}
+    .corner--bl::before{bottom:-2px;left:-2px}
+    .corner--br::before{bottom:-2px;right:-2px}
+
+    /* ── Particles ── */
+    .particles { position:absolute; inset:0; pointer-events:none; }
+    .particle {
+      position:absolute; border-radius:50%; background:var(--gold-mid); opacity:0;
+      animation: float-up linear infinite;
+    }
+    @keyframes float-up {
+      0%   { transform:translateY(0) translateX(0); opacity:0; }
+      10%  { opacity:0.55; }
+      90%  { opacity:0.08; }
+      100% { transform:translateY(-140px) translateX(var(--drift)); opacity:0; }
+    }
+
+    /* ── Title ── */
+    .title-block {
+      text-align: center;
+      margin-bottom: 30px;
+      animation: fade-in 1s ease 0.1s both;
+      position: relative; z-index: 2;
+    }
+    .title-main {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: clamp(22px, 4vw, 38px);
+      font-weight: 900;
+      letter-spacing: 8px;
+      color: var(--gold-bright);
+      text-shadow: 0 2px 0 #7a5500, 0 0 40px rgba(212,160,23,0.25);
+      animation: title-flicker 8s ease-in-out infinite;
+    }
+    @keyframes title-flicker {
+      0%,93%,100%{opacity:1} 94%{opacity:0.85} 96%{opacity:1} 97.5%{opacity:0.9}
+    }
+    .title-sub {
+      font-size: 10px; letter-spacing: 6px;
+      color: var(--gold-deep); margin-top: 8px; text-transform: uppercase;
+    }
+
+    /* ── Divider ── */
+    .divider {
+      display:flex; align-items:center; gap:10px; width:280px; margin: 6px auto;
+    }
+    .divider__line { flex:1; height:1px; background:linear-gradient(90deg,transparent,var(--gold-deep),transparent); }
+    .divider__gem  { width:6px; height:6px; background:var(--gold-mid); transform:rotate(45deg); flex-shrink:0; }
+
+    /* ── Levels grid ── */
+    .levels-grid {
+      display: flex;
+      gap: 24px;
+      align-items: stretch;
+      position: relative; z-index: 2;
+      animation: fade-in 1s ease 0.3s both;
+    }
+
+    /* ── Level card ── */
+    .level-card {
+      width: 220px;
+      background: var(--bg-panel);
+      border: 1px solid var(--gold-faint);
+      position: relative;
+      clip-path: polygon(16px 0%, 100% 0%, calc(100% - 16px) 100%, 0% 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 28px 20px 24px;
+      gap: 12px;
+      cursor: pointer;
+      transition: border-color 0.25s, box-shadow 0.25s, transform 0.2s;
+      box-shadow: 0 0 30px rgba(212,160,23,0.06);
+      animation: fade-in 0.5s ease both;
+    }
+    .level-card:nth-child(1){ animation-delay: 0.45s; }
+    .level-card:nth-child(2){ animation-delay: 0.6s; }
+    .level-card:nth-child(3){ animation-delay: 0.75s; }
+
+    .level-card::before {
+      content:''; position:absolute; top:0; left:8%; right:8%; height:1px;
+      background:linear-gradient(90deg,transparent,var(--gold-mid),transparent);
+      opacity:0.4;
+    }
+    .level-card::after {
+      content:''; position:absolute; bottom:0; left:8%; right:8%; height:1px;
+      background:linear-gradient(90deg,transparent,var(--gold-muted),transparent);
+      opacity:0.3;
+    }
+
+    .level-card.unlocked:hover {
+      border-color: var(--gold-dark);
+      box-shadow: 0 0 40px rgba(212,160,23,0.22), inset 0 0 20px rgba(212,160,23,0.04);
+      transform: translateY(-4px);
+    }
+    .level-card.unlocked:active { transform: translateY(-2px) scaleX(0.98); }
+
+    .level-card.locked {
+      cursor: not-allowed;
+      opacity: 0.55;
+      filter: saturate(0.15);
+    }
+    .level-card.locked:hover {
+      border-color: var(--gold-faint);
+      box-shadow: none;
+      transform: none;
+    }
+
+    .level-card.completed { border-color: var(--gold-muted); }
+    .level-card.completed::before { opacity: 0.7; }
+
+    /* ── Card – number badge ── */
+    .card-number-ring {
+      width: 72px; height: 72px;
+      border-radius: 50%;
+      border: 1px solid var(--gold-muted);
+      display: flex; align-items: center; justify-content: center;
+      position: relative;
+      box-shadow: 0 0 18px rgba(212,160,23,0.15), inset 0 0 12px rgba(0,0,0,0.5);
+      background: rgba(212,160,23,0.04);
+    }
+    .level-card.unlocked .card-number-ring {
+      animation: ring-pulse 3s ease-in-out infinite;
+    }
+    @keyframes ring-pulse {
+      0%,100%{ box-shadow: 0 0 18px rgba(212,160,23,0.15), inset 0 0 12px rgba(0,0,0,0.5); }
+      50%    { box-shadow: 0 0 32px rgba(212,160,23,0.35), inset 0 0 12px rgba(0,0,0,0.5); }
+    }
+
+    .card-number {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: 26px; font-weight: 900;
+      color: var(--gold-bright);
+      text-shadow: 0 0 14px rgba(212,160,23,0.6);
+    }
+    .level-card.locked .card-number { color: var(--text-ghost); text-shadow: none; }
+
+    .lock-icon {
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 26px;
+      display: none;
+    }
+    .level-card.locked .lock-icon { display: flex; }
+    .level-card.locked .card-number { display: none; }
+
+    /* ── Card – label ── */
+    .card-label {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: 13px; font-weight: 700;
+      letter-spacing: 3px;
+      color: var(--gold-bright);
+      text-shadow: 0 1px 0 #7a5500;
+      text-align: center;
+    }
+    .level-card.locked .card-label { color: var(--text-ghost); text-shadow: none; }
+
+    /* ── Card – sub-title ── */
+    .card-sub {
+      font-size: 9px; letter-spacing: 3px;
+      color: var(--text-dim); text-transform: uppercase;
+      text-align: center;
+    }
+
+    /* ── Card – divider ── */
+    .card-divider {
+      width: 80%; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold-faint), transparent);
+    }
+
+    /* ── Card – status row ── */
+    .card-status {
+      display: flex; align-items: center; gap: 6px;
+      font-size: 9px; letter-spacing: 3px;
+      text-transform: uppercase;
+    }
+    .status-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+    }
+
+    .status--available .status-dot { background: var(--gold-mid); box-shadow: 0 0 6px rgba(212,160,23,0.7); }
+    .status--available .status-text { color: var(--gold-mid); }
+
+    .status--locked .status-dot { background: #3a2800; }
+    .status--locked .status-text { color: var(--text-ghost); }
+
+    .status--completed .status-dot { background: #40c070; box-shadow: 0 0 6px rgba(64,192,112,0.6); }
+    .status--completed .status-text { color: #40c070; }
+
+    /* ── Card – play button ── */
+    .card-btn {
+      margin-top: 4px;
+      width: 100%;
+      background: transparent;
+      border: 1px solid var(--gold-faint);
+      padding: 9px 0;
+      font-family: 'Cinzel', serif;
+      font-size: 10px; font-weight: 600;
+      letter-spacing: 4px; text-transform: uppercase;
+      color: var(--text-mid);
+      cursor: pointer;
+      clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+      transition: border-color 0.2s, color 0.2s, background 0.2s;
+      position: relative;
+    }
+    .card-btn::before {
+      content:''; position:absolute; top:0; left:8%; right:8%; height:1px;
+      background:linear-gradient(90deg,transparent,var(--gold-mid),transparent);
+      opacity:0.4;
+    }
+    .level-card.unlocked .card-btn:hover {
+      border-color: var(--gold-dark);
+      color: var(--gold-bright);
+      background: rgba(212,160,23,0.07);
+    }
+    .level-card.locked .card-btn {
+      cursor: not-allowed;
+      color: var(--text-ghost);
+      opacity: 0.5;
+    }
+    .level-card.completed .card-btn {
+      border-color: var(--gold-muted);
+    }
+
+    /* connector line between cards */
+    .connector {
+      align-self: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      position: relative; z-index: 3;
+    }
+    .connector__line {
+      width: 1px; height: 40px;
+      background: linear-gradient(180deg, var(--gold-faint), transparent);
+    }
+    .connector__gem {
+      width: 7px; height: 7px;
+      background: var(--gold-muted);
+      transform: rotate(45deg);
+    }
+    .connector__line2 {
+      width: 1px; height: 40px;
+      background: linear-gradient(180deg, transparent, var(--gold-faint));
+    }
+
+    /* Back button */
+    .back-btn {
+      position: relative; z-index: 2;
+      margin-top: 28px;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      font-family: 'Cinzel', serif;
+      outline: none;
+      animation: fade-in 0.5s ease 0.9s both;
+    }
+    .back-btn__inner {
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      padding: 10px 36px;
+      border: 1px solid var(--gold-faint);
+      background: rgba(15,10,0,0.7);
+      clip-path: polygon(12px 0%,100% 0%,calc(100% - 12px) 100%,0% 100%);
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .back-btn__label {
+      font-size: 10px; font-weight: 600; letter-spacing: 4px;
+      color: var(--text-dim); text-transform: uppercase;
+      transition: color 0.2s, letter-spacing 0.2s;
+    }
+    .back-btn:hover .back-btn__inner { border-color: var(--gold-dark); background: rgba(28,18,0,0.9); }
+    .back-btn:hover .back-btn__label { color: var(--gold-bright); letter-spacing: 5px; }
+    .back-btn:active .back-btn__inner { transform: scaleX(0.97) scaleY(0.98); }
+
+    /* footer */
+    .footer {
+      position: absolute; bottom: 22px; left: 0; right: 0;
+      display: flex; justify-content: space-between; padding: 0 28px;
+      pointer-events: none;
+    }
+    .footer span {
+      font-size: 9px; letter-spacing: 3px; color: #2e2208; text-transform: uppercase;
+    }
+
+    @keyframes fade-in {
+      from { opacity:0; transform:translateY(8px); }
+      to   { opacity:1; transform:translateY(0); }
+    }
+
+    /* ── Toast notification ── */
+    .toast {
+      position: fixed; bottom: 60px; left: 50%; transform: translateX(-50%);
+      background: rgba(8,5,0,0.97);
+      color: var(--gold-bright);
+      border: 1px solid var(--gold-faint);
+      padding: 12px 28px;
+      font-size: 12px; letter-spacing: 2px;
+      clip-path: polygon(10px 0%,100% 0%,calc(100% - 10px) 100%,0% 100%);
+      box-shadow: 0 0 24px rgba(212,160,23,0.2);
+      white-space: nowrap;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s;
+      z-index: 99;
+    }
+    .toast.show { opacity: 1; }
+
+    /* completed checkmark on ring */
+    .check-badge {
+      position: absolute;
+      top: -4px; right: -4px;
+      width: 20px; height: 20px;
+      border-radius: 50%;
+      background: #1a3a28;
+      border: 1px solid #40c070;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px;
+      display: none;
+    }
+    .level-card.completed .check-badge { display: flex; }
+
+    @media (max-width: 700px) {
+      .levels-grid { flex-direction: column; gap: 16px; align-items: center; }
+      .connector { flex-direction: row; }
+      .connector__line, .connector__line2 { width: 40px; height: 1px; }
+      .level-card { width: 86vw; max-width: 300px; flex-direction: row; gap: 16px; padding: 20px 20px; clip-path: polygon(10px 0%,100% 0%,calc(100% - 10px) 100%,0% 100%); }
+      .card-divider { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="scene" role="main" aria-label="Level Selection">
+
+  <div class="bg-radial" aria-hidden="true"></div>
+  <div class="bg-hex" aria-hidden="true"></div>
+  <div class="bg-vignette" aria-hidden="true"></div>
+  <div class="bg-scanlines" aria-hidden="true"></div>
+
+  <div class="corner corner--tl" aria-hidden="true"></div>
+  <div class="corner corner--tr" aria-hidden="true"></div>
+  <div class="corner corner--bl" aria-hidden="true"></div>
+  <div class="corner corner--br" aria-hidden="true"></div>
+
+  <div class="particles" id="particles" aria-hidden="true"></div>
+
+  <!-- Title -->
+  <div class="title-block">
+    <h1 class="title-main">Select Level</h1>
+    <div class="divider">
+      <div class="divider__line"></div>
+      <div class="divider__gem"></div>
+      <div class="divider__line"></div>
+    </div>
+    <p class="title-sub">Choose Your Battlefield</p>
+  </div>
+
+  <!-- Cards -->
+  <div class="levels-grid" id="levelsGrid" aria-label="Level selection">
+
+    <!-- LEVEL 1 -->
+    <div class="level-card" id="card-1" onclick="selectLevel(1)" role="button" tabindex="0" aria-label="Level 1">
+      <div class="card-number-ring">
+        <div class="lock-icon">🔒</div>
+        <span class="card-number">I</span>
+        <div class="check-badge">✓</div>
+      </div>
+      <div class="card-label">Level 1</div>
+      <div class="card-sub">The War Waters</div>
+      <div class="card-divider"></div>
+      <div class="card-status status--available" id="status-1">
+        <div class="status-dot"></div>
+        <span class="status-text">Available</span>
+      </div>
+      <button class="card-btn" id="btn-1" onclick="selectLevel(1); event.stopPropagation();">Enter</button>
+    </div>
+
+    <!-- connector -->
+    <div class="connector" aria-hidden="true">
+      <div class="connector__line"></div>
+      <div class="connector__gem"></div>
+      <div class="connector__line2"></div>
+    </div>
+
+    <!-- LEVEL 2 -->
+    <div class="level-card" id="card-2" onclick="selectLevel(2)" role="button" tabindex="0" aria-label="Level 2">
+      <div class="card-number-ring">
+        <div class="lock-icon">🔒</div>
+        <span class="card-number">II</span>
+        <div class="check-badge">✓</div>
+      </div>
+      <div class="card-label">Level 2</div>
+      <div class="card-sub">The Starfront</div>
+      <div class="card-divider"></div>
+      <div class="card-status status--locked" id="status-2">
+        <div class="status-dot"></div>
+        <span class="status-text">Locked</span>
+      </div>
+      <button class="card-btn" id="btn-2" onclick="selectLevel(2); event.stopPropagation();">Locked</button>
+    </div>
+
+    <!-- connector -->
+    <div class="connector" aria-hidden="true">
+      <div class="connector__line"></div>
+      <div class="connector__gem"></div>
+      <div class="connector__line2"></div>
+    </div>
+
+    <!-- LEVEL 3 -->
+    <div class="level-card" id="card-3" onclick="selectLevel(3)" role="button" tabindex="0" aria-label="Level 3">
+      <div class="card-number-ring">
+        <div class="lock-icon">🔒</div>
+        <span class="card-number">III</span>
+        <div class="check-badge">✓</div>
+      </div>
+      <div class="card-label">Level 3</div>
+      <div class="card-sub">The Battlefield</div>
+      <div class="card-divider"></div>
+      <div class="card-status status--locked" id="status-3">
+        <div class="status-dot"></div>
+        <span class="status-text">Locked</span>
+      </div>
+      <button class="card-btn" id="btn-3" onclick="selectLevel(3); event.stopPropagation();">Locked</button>
+    </div>
+
+  </div>
+
+  <!-- Back button -->
+  <button class="back-btn" onclick="goBack()" aria-label="Back to main menu">
+    <div class="back-btn__inner">
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+        <path d="M8 2 L4 6 L8 10" stroke="#6a4a08" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+      <span class="back-btn__label">Main Menu</span>
+    </div>
+  </button>
+
+  <footer class="footer" aria-hidden="true">
+    <span>© 2026 Your Studio</span>
+    <span>v1.0.0</span>
+  </footer>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+/* ── Particles ── */
+(function() {
+  const c = document.getElementById('particles');
+  for (let i = 0; i < 22; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    const s = Math.random() > 0.55 ? 3 : 2;
+    Object.assign(p.style, {
+      width: s+'px', height: s+'px',
+      left: (Math.random()*100)+'%',
+      bottom: (Math.random()*35)+'%',
+      '--drift': (Math.random()*50-25)+'px',
+      animationDuration: (4+Math.random()*6)+'s',
+      animationDelay: (Math.random()*7)+'s',
+    });
+    c.appendChild(p);
+  }
+})();
+
+/* ── Progress State ──
+   localStorage keys:
+     'level1Complete' = 'true'
+     'level2Complete' = 'true'
+     'level3Complete' = 'true'   ← set by index.js on Level 3 win
+
+   To test from console:
+     localStorage.setItem('level1Complete','true'); location.reload();
+     localStorage.setItem('level2Complete','true'); location.reload();
+     localStorage.setItem('level3Complete','true'); location.reload();
+*/
+
+function getProgress() {
+  return {
+    l1: localStorage.getItem('level1Complete') === 'true',
+    l2: localStorage.getItem('level2Complete') === 'true',
+    l3: localStorage.getItem('level3Complete') === 'true',
+  };
+}
+
+function applyState() {
+  const { l1, l2, l3 } = getProgress();
+
+  // Level 1 — always unlocked; completed if l1 done
+  setCard(1, l1 ? 'completed' : 'unlocked');
+
+  // Level 2 — unlocked only if l1 done; completed if l2 done
+  if (l1) setCard(2, l2 ? 'completed' : 'unlocked');
+  else     setCard(2, 'locked');
+
+  // Level 3 — unlocked only if l2 done; completed if l3 done ✅
+  if (l2) setCard(3, l3 ? 'completed' : 'unlocked');
+  else     setCard(3, 'locked');
+}
+
+function setCard(num, state) {
+  const card   = document.getElementById('card-'+num);
+  const status = document.getElementById('status-'+num);
+  const btn    = document.getElementById('btn-'+num);
+
+  card.classList.remove('unlocked','locked','completed');
+  status.classList.remove('status--available','status--locked','status--completed');
+
+  if (state === 'locked') {
+    card.classList.add('locked');
+    status.classList.add('status--locked');
+    status.querySelector('.status-text').textContent = 'Locked';
+    btn.textContent = 'Locked';
+    card.setAttribute('aria-disabled','true');
+  } else if (state === 'completed') {
+    card.classList.add('completed','unlocked');
+    status.classList.add('status--completed');
+    status.querySelector('.status-text').textContent = 'Completed';
+    btn.textContent = 'Replay';
+    card.removeAttribute('aria-disabled');
+  } else {
+    card.classList.add('unlocked');
+    status.classList.add('status--available');
+    status.querySelector('.status-text').textContent = 'Available';
+    btn.textContent = 'Enter';
+    card.removeAttribute('aria-disabled');
+  }
+}
+
+/* ── Toast ── */
+let toastTimer;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+/* ── Select level ── */
+function selectLevel(num) {
+  const card = document.getElementById('card-' + num);
+  if (card.classList.contains('locked')) {
+    const msgs = [
+      '🔒 Complete the previous level to unlock this.',
+      '⚔ This realm is sealed. Prove yourself first.',
+      '✦ The gate will open when you are worthy.',
+    ];
+    showToast(msgs[Math.floor(Math.random() * msgs.length)]);
+    card.style.animation = 'none';
+    card.offsetHeight;
+    card.style.animation = 'shake 0.35s ease';
+    return;
+  }
+
+  showToast('✦ Entering Level ' + num + '...');
+  setTimeout(() => {
+    if (num === 1) { window.location.href = '/level';  return; }
+    if (num === 2) { window.location.href = '/level2'; return; }
+    if (num === 3) { window.location.href = '/level3'; return; }
+  }, 1200);
+}
+
+/* ── Shake keyframe ── */
+const style = document.createElement('style');
+style.textContent = `
+  @keyframes shake {
+    0%,100%{ transform: translateX(0); }
+    20%    { transform: translateX(-7px); }
+    40%    { transform: translateX(7px); }
+    60%    { transform: translateX(-5px); }
+    80%    { transform: translateX(5px); }
+  }
+`;
+document.head.appendChild(style);
+
+/* ── Back ── */
+function goBack() {
+  window.location.href = '/menu1';
+}
+
+/* ── Keyboard nav ── */
+document.addEventListener('keydown', e => {
+  const cards = Array.from(document.querySelectorAll('.level-card:not(.locked)'));
+  const idx   = cards.indexOf(document.activeElement);
+  if (e.key === 'ArrowRight' && idx < cards.length-1) { e.preventDefault(); cards[idx+1].focus(); }
+  if (e.key === 'ArrowLeft'  && idx > 0)              { e.preventDefault(); cards[idx-1].focus(); }
+  if (e.key === 'Enter' && idx !== -1) cards[idx].click();
+});
+
+/* ── Init ── */
+applyState();
+</script>
+</body>
+</html>

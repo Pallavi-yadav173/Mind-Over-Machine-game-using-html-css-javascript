@@ -1,0 +1,32 @@
+.btn-aurum {
+    padding: 12px 32px;
+    font-size: 1rem;
+    font-family: inherit;
+    width: 200px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+.btn-retry {
+    background: #c0392b;
+    color: #fff;
+}
+
+.btn-retry:hover {
+    background: #e74c3c;
+}
+
+.btn-levels {
+    background: linear-gradient(135deg, #f5c518, #d4a017, #b8860b);
+    color: #1a1a1a;
+    border: 2px solid #f5c518;
+    box-shadow: 0 0 12px rgba(245, 197, 24, 0.5);
+}
+
+.btn-levels:hover {
+    background: linear-gradient(135deg, #ffe066, #f5c518, #d4a017);
+    box-shadow: 0 0 20px rgba(245, 197, 24, 0.8);
+}

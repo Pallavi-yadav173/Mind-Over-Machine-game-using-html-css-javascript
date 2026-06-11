@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Reset Password</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Cinzel+Decorative:wght@700&display=swap" rel="stylesheet">
+
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  height: 100vh;
+  background: linear-gradient(135deg, #000000, #1a1200, #3a2800);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Cinzel', serif;
+  color: #ffd700;
+}
+
+/* Container */
+.reset-box {
+  width: 420px;
+  padding: 40px;
+  background: rgba(10,6,0,0.95);
+  border: 1px solid #5a3e00;
+  box-shadow: 0 0 40px rgba(212,160,23,0.3);
+  text-align: center;
+  clip-path: polygon(15px 0%, 100% 0%, calc(100% - 15px) 100%, 0% 100%);
+}
+
+/* Title */
+h1 {
+  font-family: 'Cinzel Decorative', serif;
+  letter-spacing: 5px;
+  margin-bottom: 10px;
+  text-shadow: 0 0 10px #d4a017;
+}
+
+p {
+  font-size: 12px;
+  color: #c8900a;
+  margin-bottom: 25px;
+  letter-spacing: 1px;
+}
+
+/* Input */
+input {
+  width: 100%;
+  padding: 14px;
+  background: black;
+  border: 1px solid #5a3e00;
+  color: #ffd700;
+  margin-bottom: 15px;
+  outline: none;
+  letter-spacing: 2px;
+}
+
+input:focus {
+  border-color: #d4a017;
+  box-shadow: 0 0 10px rgba(212,160,23,0.3);
+}
+
+/* Button */
+button {
+  width: 100%;
+  padding: 14px;
+  background: linear-gradient(135deg, #d4a017, #ffcc00);
+  border: none;
+  color: black;
+  font-weight: bold;
+  cursor: pointer;
+  letter-spacing: 3px;
+  transition: 0.3s;
+}
+
+button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 20px rgba(212,160,23,0.6);
+}
+
+/* Status message */
+.status {
+  margin-top: 12px;
+  font-size: 12px;
+  color: #c8900a;
+}
+
+/* Back */
+.back {
+  margin-top: 15px;
+  font-size: 12px;
+  cursor: pointer;
+  color: #c8900a;
+}
+
+.back:hover {
+  color: #ffd700;
+}
+</style>
+</head>
+
+<body>
+
+<div class="reset-box">
+  <h1>RESET</h1>
+  <p>Enter your new password</p>
+
+  <input type="password" id="newPass" placeholder="New Password">
+  <input type="password" id="confirmPass" placeholder="Confirm Password">
+
+  <button onclick="resetPassword()">UPDATE PASSWORD</button>
+
+  <div class="status" id="statusMsg"></div>
+
+  <div class="back" onclick="goLogin()">← Back to Login</div>
+</div>
+
+<script>
+
+  function resetPassword(){
+  
+      const newPass = document.getElementById("newPass").value;
+      const confirmPass = document.getElementById("confirmPass").value;
+  
+      if(newPass !== confirmPass){
+          alert("Passwords do not match");
+          return;
+      }
+  
+      const email = localStorage.getItem("resetEmail");
+  
+      fetch("http://localhost:3000/update-password",{
+  
+          method:"POST",
+  
+          headers:{
+              "Content-Type":"application/json"
+          },
+  
+          body:JSON.stringify({
+              email:email,
+              password:newPass
+          })
+  
+      })
+  
+      .then(res => res.json())
+  
+      .then(data => {
+  
+          alert(data.message);
+  
+          window.location.href = "login.html";
+  
+      })
+  
+      .catch(err=>{
+          console.log(err);
+          alert("Server error");
+      });
+  
+  }
+  
+  function goLogin(){
+      window.location.href = "login.html";
+  }
+  
+  </script>
+
+</body>
+</html>

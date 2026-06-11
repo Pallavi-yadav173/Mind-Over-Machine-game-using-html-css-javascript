@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AURUM — Credits</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;600&family=Rajdhani:wght@300;400;500;600&display=swap" rel="stylesheet" />
+
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --gold-bright: #f0c040;
+      --gold-mid:    #d4a017;
+      --gold-dark:   #c8900a;
+      --gold-deep:   #8a6010;
+      --gold-muted:  #5a3e00;
+      --gold-faint:  #3a2800;
+      --bg-base:     #0a0700;
+      --bg-panel:    rgba(12, 8, 0, 0.88);
+      --text-bright: #f5d060;
+      --text-mid:    #c8900a;
+      --text-dim:    #b8860b;   
+      --text-ghost:  #8a6020;
+      --green:       #40c070;
+    }
+
+    html, body {
+      width: 100%; height: 100%;
+      background: var(--bg-base);
+      overflow: hidden;
+      font-family: 'Cinzel', serif;
+    }
+
+    /* ── Backgrounds ── */
+    .bg-radial {
+      position: fixed; inset: 0; pointer-events: none;
+      background:
+        radial-gradient(ellipse 70% 55% at 50% 0%,   #3d2800 0%, transparent 65%),
+        radial-gradient(ellipse 50% 30% at 50% 100%, #2a1a00 0%, transparent 55%),
+        radial-gradient(ellipse 30% 40% at 10% 50%,  #1a1000 0%, transparent 50%),
+        radial-gradient(ellipse 30% 40% at 90% 50%,  #1a1000 0%, transparent 50%);
+    }
+    .bg-hex {
+      position: fixed; inset: 0; opacity: 0.05; pointer-events: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='52'%3E%3Cpolygon points='30,2 58,17 58,35 30,50 2,35 2,17' fill='none' stroke='%23d4a017' stroke-width='1'/%3E%3C/svg%3E");
+      background-size: 60px 52px;
+    }
+    .bg-vignette {
+      position: fixed; inset: 0; pointer-events: none;
+      background: radial-gradient(ellipse 80% 80% at 50% 50%, transparent 40%, rgba(0,0,0,0.65) 100%);
+    }
+    .bg-scanlines {
+      position: fixed; inset: 0; pointer-events: none;
+      background: repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,0,0,0.07) 3px, rgba(0,0,0,0.07) 4px);
+    }
+
+    /* ── Corners ── */
+    .corner {
+      position: fixed; width: 48px; height: 48px;
+      border-color: #7a5200; border-style: solid; opacity: 0.55; pointer-events: none; z-index: 10;
+    }
+    .corner--tl { top:20px; left:20px; border-width:2px 0 0 2px; }
+    .corner--tr { top:20px; right:20px; border-width:2px 2px 0 0; }
+    .corner--bl { bottom:20px; left:20px; border-width:0 0 2px 2px; }
+    .corner--br { bottom:20px; right:20px; border-width:0 2px 2px 0; }
+
+    /* ── Particles ── */
+    .particles { position: fixed; inset: 0; pointer-events: none; z-index: 1; }
+    .particle {
+      position: absolute; border-radius: 50%; background: var(--gold-mid); opacity: 0;
+      animation: float-up linear infinite;
+    }
+    @keyframes float-up {
+      0%   { transform: translateY(0) translateX(0); opacity: 0; }
+      10%  { opacity: 0.5; }
+      90%  { opacity: 0.06; }
+      100% { transform: translateY(-160px) translateX(var(--drift)); opacity: 0; }
+    }
+
+    /* ── Scene ── */
+    .scene {
+      position: relative; z-index: 2;
+      width: 100%; height: 100vh;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: flex-start;
+      overflow-y: auto; overflow-x: hidden;
+      padding: 48px 20px 80px;
+      scrollbar-width: none;
+    }
+    .scene::-webkit-scrollbar { display: none; }
+
+    /* ── Page title ── */
+    .page-title {
+      text-align: center;
+      margin-bottom: 8px;
+      animation: fade-in 0.8s ease 0.1s both;
+    }
+    .page-title h1 {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: clamp(20px, 3.5vw, 34px);
+      font-weight: 900;
+      letter-spacing: 10px;
+      color: var(--gold-bright);
+      text-shadow: 0 2px 0 #7a5500, 0 0 40px rgba(212,160,23,0.3);
+      animation: title-flicker 8s ease-in-out infinite;
+    }
+    @keyframes title-flicker {
+      0%,93%,100%{opacity:1} 94%{opacity:0.8} 96%{opacity:1} 97.5%{opacity:0.9}
+    }
+
+    /* ── Divider ── */
+    .divider {
+      display: flex; align-items: center; gap: 10px;
+      width: 260px; margin: 10px auto 36px;
+    }
+    .divider__line { flex: 1; height: 1px; background: linear-gradient(90deg, transparent, var(--gold-deep), transparent); }
+    .divider__gem  { width: 6px; height: 6px; background: var(--gold-mid); transform: rotate(45deg); flex-shrink: 0; }
+
+    /* ── Credits container ── */
+    .credits-wrap {
+      width: 100%; max-width: 680px;
+      display: flex; flex-direction: column;
+      gap: 28px;
+    }
+
+    /* ── Section block ── */
+    .credit-section {
+      background: var(--bg-panel);
+      border: 1px solid var(--gold-faint);
+      clip-path: polygon(14px 0%, 100% 0%, calc(100% - 14px) 100%, 0% 100%);
+      padding: 28px 36px;
+      position: relative;
+      animation: fade-in 0.6s ease both;
+    }
+    .credit-section::before {
+      content: ''; position: absolute; top: 0; left: 8%; right: 8%; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold-mid), transparent);
+      opacity: 0.45;
+    }
+    .credit-section::after {
+      content: ''; position: absolute; bottom: 0; left: 8%; right: 8%; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold-muted), transparent);
+      opacity: 0.3;
+    }
+    .credit-section:nth-child(1) { animation-delay: 0.2s; }
+    .credit-section:nth-child(2) { animation-delay: 0.35s; }
+    .credit-section:nth-child(3) { animation-delay: 0.5s; }
+    .credit-section:nth-child(4) { animation-delay: 0.65s; }
+    .credit-section:nth-child(5) { animation-delay: 0.8s; }
+
+    /* section heading */
+    .section-heading {
+      display: flex; align-items: center; gap: 14px;
+      margin-bottom: 20px;
+    }
+    .section-heading__icon {
+      font-size: 18px; line-height: 1;
+    }
+    .section-heading__title {
+      font-family: 'Cinzel', serif;
+      font-size: 10px; font-weight: 600;
+      letter-spacing: 5px; text-transform: uppercase;
+      color: var(--gold-deep);
+    }
+    .section-heading__line {
+      flex: 1; height: 1px;
+      background: linear-gradient(90deg, var(--gold-faint), transparent);
+    }
+
+    /* ── Hero credit (game title + studio) ── */
+    .hero-credit {
+      text-align: center;
+      padding: 8px 0;
+    }
+    .hero-credit__game {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: clamp(28px, 5vw, 52px);
+      font-weight: 900;
+      letter-spacing: 6px;
+      color: var(--gold-bright);
+      text-shadow: 0 2px 0 #7a5500, 0 0 50px rgba(212,160,23,0.35);
+      line-height: 1;
+    }
+    .hero-credit__sub {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 11px; letter-spacing: 5px;
+      color: var(--gold-deep); margin-top: 10px;
+      text-transform: uppercase;
+    }
+    .hero-credit__studio {
+      font-family: 'Cinzel', serif;
+      font-size: 13px; letter-spacing: 4px;
+      color: var(--gold-mid); margin-top: 18px;
+      text-transform: uppercase;
+    }
+    .hero-credit__year {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 11px; color: var(--text-dim);
+      letter-spacing: 3px; margin-top: 6px;
+    }
+
+    /* ── Role rows ── */
+    .role-list {
+      display: flex; flex-direction: column; gap: 14px;
+    }
+    .role-row {
+      display: flex; align-items: baseline;
+      gap: 0;
+    }
+    .role-row__label {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 10px; letter-spacing: 4px;
+      color: var(--text-dim); text-transform: uppercase;
+      min-width: 180px; flex-shrink: 0;
+    }
+    .role-row__dots {
+      flex: 1; border-bottom: 1px dotted var(--gold-faint);
+      margin: 0 12px; position: relative; top: -4px;
+      min-width: 20px;
+    }
+    .role-row__name {
+      font-family: 'Cinzel', serif;
+      font-size: 13px; letter-spacing: 2px;
+      color: var(--gold-bright);
+      text-shadow: 0 0 10px rgba(212,160,23,0.25);
+      white-space: nowrap;
+    }
+
+    /* ── Tech stack pills ── */
+    .tech-list {
+      display: flex; flex-wrap: wrap; gap: 10px;
+    }
+    .tech-pill {
+      padding: 6px 16px;
+      border: 1px solid var(--gold-faint);
+      clip-path: polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%);
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 11px; letter-spacing: 3px;
+      color: var(--gold-mid); text-transform: uppercase;
+      background: rgba(212,160,23,0.04);
+      transition: border-color 0.2s, color 0.2s, background 0.2s;
+    }
+    .tech-pill:hover {
+      border-color: var(--gold-dark);
+      color: var(--gold-bright);
+      background: rgba(212,160,23,0.08);
+    }
+
+    /* ── Thank you message ── */
+    .thankyou-text {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 15px; font-weight: 300;
+      line-height: 1.9; letter-spacing: 1px;
+      color: rgba(212,160,23,0.55);
+      text-align: center;
+    }
+    .thankyou-text strong {
+      color: var(--gold-bright);
+      font-weight: 600;
+    }
+
+    /* ── Version stamp ── */
+    .version-row {
+      display: flex; justify-content: center; align-items: center; gap: 16px;
+      margin-top: 4px;
+    }
+    .version-badge {
+      display: flex; align-items: center; gap: 8px;
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 10px; letter-spacing: 3px;
+      color: var(--text-dim); text-transform: uppercase;
+    }
+    .version-dot {
+      width: 5px; height: 5px; border-radius: 50%;
+      background: var(--gold-mid);
+      box-shadow: 0 0 6px rgba(212,160,23,0.7);
+      animation: pulse 2s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%,100%{ opacity:1; transform:scale(1); }
+      50%    { opacity:0.4; transform:scale(0.6); }
+    }
+
+    /* ── Back button ── */
+    .back-btn {
+      margin-top: 36px;
+      background: transparent; border: none;
+      cursor: pointer; font-family: 'Cinzel', serif; outline: none;
+      animation: fade-in 0.5s ease 1s both;
+    }
+    .back-btn__inner {
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      padding: 10px 40px;
+      border: 1px solid var(--gold-faint);
+      background: rgba(15,10,0,0.7);
+      clip-path: polygon(12px 0%, 100% 0%, calc(100% - 12px) 100%, 0% 100%);
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .back-btn__label {
+      font-size: 10px; font-weight: 600; letter-spacing: 4px;
+      color: var(--text-dim); text-transform: uppercase;
+      transition: color 0.2s, letter-spacing 0.2s;
+    }
+    .back-btn:hover .back-btn__inner { border-color: var(--gold-dark); background: rgba(28,18,0,0.9); }
+    .back-btn:hover .back-btn__label { color: var(--gold-bright); letter-spacing: 5px; }
+    .back-btn:active .back-btn__inner { transform: scaleX(0.97) scaleY(0.98); }
+
+    @keyframes fade-in {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* footer */
+    .footer {
+      position: fixed; bottom: 22px; left: 0; right: 0;
+      display: flex; justify-content: space-between; padding: 0 28px;
+      pointer-events: none; z-index: 10;
+    }
+    .footer span {
+      font-size: 9px; letter-spacing: 3px; color: #2e2208; text-transform: uppercase;
+    }
+  </style>
+</head>
+<body>
+
+<div class="bg-radial"></div>
+<div class="bg-hex"></div>
+<div class="bg-vignette"></div>
+<div class="bg-scanlines"></div>
+
+<div class="corner corner--tl"></div>
+<div class="corner corner--tr"></div>
+<div class="corner corner--bl"></div>
+<div class="corner corner--br"></div>
+
+<div class="particles" id="particles"></div>
+
+<div class="scene">
+
+  <div class="page-title">
+    <h1>Credits</h1>
+  </div>
+
+  <div class="divider">
+    <div class="divider__line"></div>
+    <div class="divider__gem"></div>
+    <div class="divider__line"></div>
+  </div>
+
+  <div class="credits-wrap">
+
+    <!-- Hero block -->
+    <div class="credit-section">
+      <div class="hero-credit">
+        <div class="hero-credit__game">Mind Over Machine</div>
+        <div class="hero-credit__sub">Echoes of the Matrix</div>
+        <div class="hero-credit__studio">✦ &nbsp; Our team &nbsp; ✦</div>
+        <div class="hero-credit__year">© 2026 · All Rights Reserved</div>
+      </div>
+    </div>
+
+    <!-- Team / Solo dev block -->
+    <div class="credit-section">
+      <div class="section-heading">
+        <span class="section-heading__icon">⚔</span>
+        <span class="section-heading__title">The Forgers</span>
+        <div class="section-heading__line"></div>
+      </div>
+      <div class="role-list">
+        <div class="role-row">
+          <span class="role-row__label">Game Design & Dev</span>
+          <div class="role-row__dots"></div>
+          <span class="role-row__name">Pallavi,Lalitha,Nandu</span>
+        </div>
+    </div>
+</div>
+
+    <!-- Tech stack -->
+    <div class="credit-section">
+      <div class="section-heading">
+        <span class="section-heading__icon">◈</span>
+        <span class="section-heading__title">Built With</span>
+        <div class="section-heading__line"></div>
+      </div>
+      <div class="tech-list">
+        <div class="tech-pill">HTML5 Canvas</div>
+        <div class="tech-pill">JavaScript</div>
+        <div class="tech-pill">CSS3</div>
+        <div class="tech-pill">Node.js</div>
+        <div class="tech-pill">MongoDB</div>
+        <div class="tech-pill">Express</div>
+        <div class="tech-pill">Google Fonts</div>
+      </div>
+    </div>
+
+    <!-- Thank you -->
+    <div class="credit-section">
+      <div class="section-heading">
+        <span class="section-heading__icon">✦</span>
+        <span class="section-heading__title">A Word of Thanks</span>
+        <div class="section-heading__line"></div>
+      </div>
+      <p class="thankyou-text">
+        To every player who picked up this game and stepped into the grid —
+        <strong>thank you.</strong><br/>
+        This world was built with passion, late nights, and an unyielding love
+        for the craft. Every bug you endured, every level you conquered,
+        every moment you felt something — that was the whole point.<br/><br/>
+        <strong>May the gold always guide your path.</strong>
+      </p>
+    </div>
+
+    <!-- Version -->
+    <div class="credit-section">
+      <div class="section-heading">
+        <span class="section-heading__icon">⊙</span>
+        <span class="section-heading__title">Build Info</span>
+        <div class="section-heading__line"></div>
+      </div>
+      <div class="version-row">
+        <div class="version-badge">
+          <div class="version-dot"></div>
+          <span>Version 1.0.0</span>
+        </div>
+        <div class="version-badge" style="color:var(--gold-deep);">·</div>
+        <div class="version-badge">
+          <span>Released 2026</span>
+        </div>
+        <div class="version-badge" style="color:var(--gold-deep);">·</div>
+        <div class="version-badge">
+          <span>Status &nbsp;</span><span style="color:var(--green);">LIVE</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Back button -->
+  <button class="back-btn" onclick="window.location.href='menu1.html'">
+    <div class="back-btn__inner">
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+        <path d="M8 2 L4 6 L8 10" stroke="#6a4a08" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+      <span class="back-btn__label">Main Menu</span>
+    </div>
+  </button>
+
+</div>
+
+<footer class="footer">
+  <span>© 2026 Your Studio</span>
+  <span>v1.0.0</span>
+</footer>
+
+<script>
+  // Particles
+  (function () {
+    const c = document.getElementById('particles');
+    for (let i = 0; i < 22; i++) {
+      const p = document.createElement('div');
+      p.className = 'particle';
+      const s = Math.random() > 0.55 ? 3 : 2;
+      Object.assign(p.style, {
+        width: s + 'px', height: s + 'px',
+        left: (Math.random() * 100) + '%',
+        bottom: (Math.random() * 40) + '%',
+        '--drift': (Math.random() * 50 - 25) + 'px',
+        animationDuration: (4 + Math.random() * 6) + 's',
+        animationDelay: (Math.random() * 7) + 's',
+      });
+      c.appendChild(p);
+    }
+  })();
+</script>
+</body>
+</html>

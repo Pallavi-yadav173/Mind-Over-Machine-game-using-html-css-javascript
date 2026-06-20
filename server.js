@@ -15,7 +15,7 @@ app.use((req, res, next) => {
 });
 
 // ✅ MongoDB Connection
-const DB_URL = "mongodb://dbPallavi23:dbKP2005@ac-ijjrejp-shard-00-00.dslfrhb.mongodb.net:27017,ac-ijjrejp-shard-00-01.dslfrhb.mongodb.net:27017,ac-ijjrejp-shard-00-02.dslfrhb.mongodb.net:27017/gameDB?ssl=true&replicaSet=atlas-n5h5nr-shard-0&authSource=admin&retryWrites=true&w=majority&appName=Cluster0";
+const DB_URL = "mongodb://*****:*******@ac-ijjrejp-shard-00-00.dslfrhb.mongodb.net:27017,ac-ijjrejp-shard-00-01.dslfrhb.mongodb.net:27017,ac-ijjrejp-shard-00-02.dslfrhb.mongodb.net:27017/gameDB?ssl=true&replicaSet=atlas-n5h5nr-shard-0&authSource=admin&retryWrites=true&w=majority&appName=Cluster0";
 mongoose.connect(DB_URL)
 .then(() => console.log("✅ DB Connected Successfully"))
 .catch(err => console.log("❌ DB ERROR:", err.message));

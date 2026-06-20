@@ -23,14 +23,16 @@ Mind Over Machine is a browser-based action game where players battle through pr
 🎬 Intro and outro cutscene videos
 🎵 Background music and sound effects per level
 🌄 Parallax-scrolling backgrounds for visual depth
+🔐 Secure user authentication with hashed passwords (bcrypt) — signup, login, forgot password, and reset password flow
 
 
 
 🛠️ Tech Stack
 
 Frontend: HTML, CSS, JavaScript
-Backend: Node.js<!-- CONFIRM: add Express here if you used it — check your require() statements in server.js -->
-Database: MongoDB<!-- CONFIRM: add Mongoose here if you used it -->
+Backend: Node.js, Express.js
+Database: MongoDB, Mongoose
+Security: bcrypt (password hashing)
 
 
 📂 Project Structure

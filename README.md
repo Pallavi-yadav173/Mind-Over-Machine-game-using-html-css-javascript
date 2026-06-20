@@ -38,19 +38,40 @@ Security: bcrypt (password hashing)
 📂 Project Structure
 
 Mind-Over-Machine/
-├── server.js               # Backend server & API routes
-├── package.json             # Dependencies
-├── public/
-│   ├── pages/                # HTML pages (login, levels, menu, etc.)
-│   ├── css/                  # Stylesheets
-│   ├── js/                   # Game logic scripts
-│   └── assets/
-│       ├── images/           # Sprites & backgrounds
-│       ├── audio/             # Sound effects & music
-│       └── video/             # Intro/outro cutscenes
-└── README.md
+├── server.js
+├── package.json
+├── package-lock.json
+├── style.css
+├── script.js
+├── script1.js
+├── classes.js
+├── utils.js
+├── character.png
+├── login.html
+├── signup.html
+├── forgot.html
+├── reset.html
+├── menu1.html
+├── levelselect.html
+├── level.html
+├── level2.html
+├── level3.html
+├── settings.html
+├── credits.html
+├── intro.html
+├── intro.mp4
+├── end.html
+├── end.mp4
+└── assets/
+    ├── background.png, layer1-4.png      # parallax backgrounds
+    ├── player.png, projectile.png         # player sprites
+    ├── drone.png, jet.png, angler1-2.png, hivewhale.png   # enemy sprites
+    ├── fireexplosion.png, smokeExplosion.png, gears.png, shop.png, lucky.png
+    ├── bgm.mp3, level1.mp3, shoot1.mp3, sword.mp3, land.mp3, 1.mp3
+    ├── kenji/          # character animation frames (Attack1, Attack2, Death, Fall, Idle, Jump, Run, TakeHit)
+    └── samuraiMack/    # character animation frames (Attack1, Attack2, Death, Fall, Idle, Jump, Run, TakeHit)
 
-<!-- CONFIRM: update this to match your actual folder layout once you reorganize -->
+
 
 🚀 Getting Started
 

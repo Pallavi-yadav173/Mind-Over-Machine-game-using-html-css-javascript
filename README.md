@@ -73,8 +73,6 @@ Mind-Over-Machine/
 
 
 
-🚀 Getting Started
-
 Prerequisites
 
 
@@ -113,22 +111,20 @@ bash   node server.js
 Open your browser and go to http://localhost:3000
 
 
-<!-- CONFIRM: replace 3000 with your actual port if different -->
 
 🎥 Demo
 
-<!-- CONFIRM: add either a GIF embed or a YouTube link here, e.g.: -->
-<!-- [Watch the gameplay demo](your-youtube-link-here) -->
+Gameplay demo coming soon.
+
 
 🔮 Future Improvements
 
 
 Add a leaderboard / high-score system
-Deploy live version for instant play
+Deploy a live version for instant play
 Add more levels and enemy types
 
 
-<!-- CONFIRM: edit this list to reflect what you'd genuinely want to add -->
 
 👩‍💻 Author
 
